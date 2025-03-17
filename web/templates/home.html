@@ -4,415 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件下载代理加速</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #7209b7;
-            --accent: #4cc9f0;
-            --background: #f8f9fa;
-            --card-bg: rgba(255, 255, 255, 0.7);
-            --text: #212529;
-            --text-light: #6c757d;
-            --radius: 20px;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #4361ee, #7209b7);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background-attachment: fixed;
-            color: var(--text);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 毛玻璃卡片 */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: 0 20px 40px var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-header {
-            padding: 40px 30px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card-header h1 {
-            font-size: 2.5rem;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .card-header p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-
-        .card-body {
-            padding: 30px;
-        }
-
-        /* 输入表单 */
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-            display: flex;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: calc(var(--radius) - 8px);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .input-group:focus-within {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group .icon {
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            color: var(--primary);
-        }
-
-        .input-group input {
-            flex: 1;
-            border: none;
-            padding: 18px 15px;
-            font-size: 1rem;
-            background: transparent;
-            outline: none;
-        }
-
-        /* 按钮样式 */
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px 28px;
-            border-radius: calc(var(--radius) - 8px);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn:hover {
-            background: var(--primary-dark);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-        }
-
-        .btn .icon {
-            font-size: 1.2rem;
-        }
-
-        /* 结果区域 */
-        .result {
-            margin-top: 30px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: calc(var(--radius) - 8px);
-            padding: 25px;
-            display: none;
-        }
-
-        .result h3 {
-            margin-bottom: 15px;
-            color: var(--primary-dark);
-            font-size: 1.3rem;
-        }
-
-        .result-url {
-            display: flex;
-            margin-bottom: 20px;
-        }
-
-        .result-url input {
-            flex: 1;
-            padding: 15px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px 0 0 10px;
-            font-size: 0.9rem;
-            background: white;
-            outline: none;
-        }
-
-        .copy-btn {
-            background: var(--accent);
-            border: none;
-            border-radius: 0 10px 10px 0;
-            padding: 0 15px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: #3ab7dc;
-        }
-
-        .direct-link {
-            text-align: center;
-        }
-
-        .direct-link a {
-            display: inline-block;
-            padding: 12px 25px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .direct-link a:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 特性区域 */
-        .features {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .feature {
-            flex: 1;
-            min-width: 150px;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .feature:hover {
-            background: rgba(255, 255, 255, 0.7);
-            transform: translateY(-3px);
-        }
-
-        .feature .icon {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .feature h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-            color: var(--text);
-        }
-
-        .feature p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .card-header {
-                padding: 30px 20px;
-            }
-            
-            .card-header h1 {
-                font-size: 2rem;
-            }
-            
-            .card-body {
-                padding: 20px;
-            }
-            
-            .features {
-                flex-direction: column;
-            }
-            
-            .feature {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <div class="card glass-card">
+        <div class="glass-card tilt-card">
             <div class="card-header">
-                <div class="title-container">
-                    <h1>文件下载代理加速</h1>
-                    <a href="https://github.com/Lsmoisu/dl-proxy" target="_blank" class="github-icon">
-                        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" 
-                             alt="GitHub Repository" width="32" height="32">
-                    </a>
-                </div>
-                
-                <div class="github-badges">
-                    <a href="https://github.com/Lsmoisu/dl-proxy/stargazers" target="_blank">
-                        <img src="https://img.shields.io/github/stars/Lsmoisu/dl-proxy?style=flat-square" alt="GitHub stars">
-                    </a>
-                    <a href="https://hub.docker.com/r/zarilla/dl-proxy" target="_blank">
-                        <img src="https://img.shields.io/docker/pulls/zarilla/dl-proxy?style=flat-square" alt="Docker Pulls">
-                    </a>
-                    <a href="https://github.com/Lsmoisu/dl-proxy/blob/main/LICENSE" target="_blank">
-                        <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License">
-                    </a>
-                </div>
-                
-                <p class="open-source-notice">本项目采用 MIT 协议开源，欢迎自由使用和二次开发。如果对您有帮助，欢迎 ⭐Star 支持！</p>
-                <p class="subtitle">高性能HTTP流式传输代理</p>
+                <h1>文件下载代理加速</h1>
+                <p class="subtitle">安全、高速、无限制的文件下载代理服务</p>
             </div>
             
             <div class="card-body">
-                <div class="input-group">
-                    <span class="icon material-symbols-rounded">link</span>
-                    <input type="text" id="url-input" placeholder="输入完整URL (例如: https://example.com/file.mp4)" />
+                <div class="form-container">
+                    <div class="input-group">
+                        <span class="input-icon material-symbols-rounded">link</span>
+                        <input type="text" id="url-input" placeholder="输入需要代理下载的文件URL" autocomplete="off">
+                    </div>
+                    
+                    <button id="proxy-btn" class="btn btn-primary">
+                        <span class="material-symbols-rounded">cloud_download</span>
+                        生成代理链接
+                    </button>
                 </div>
                 
-                <button id="generate-btn" class="btn">
-                    <span class="icon material-symbols-rounded">cloud_download</span>
-                    生成代理链接
-                </button>
-                
-                <div id="result" class="result">
-                    <h3>代理链接已生成</h3>
-                    <div class="result-url">
-                        <input type="text" id="proxy-url" readonly />
-                        <button id="copy-btn" class="copy-btn material-symbols-rounded">content_copy</button>
+                <div id="result-container" class="result-container">
+                    <h3 class="result-title">代理链接已生成</h3>
+                    
+                    <div class="url-copy-container">
+                        <input type="text" id="proxy-url" readonly>
+                        <button id="copy-btn" class="copy-btn">
+                            <span class="material-symbols-rounded">content_copy</span>
+                        </button>
                     </div>
-                    <div class="direct-link">
-                        <a href="#" id="direct-link" target="_blank">直接下载</a>
+                    
+                    <div class="direct-download">
+                        <a href="#" id="direct-link">
+                            <span class="material-symbols-rounded">download</span>
+                            直接下载文件
+                        </a>
                     </div>
                 </div>
                 
-                <div class="features">
-                    <div class="feature">
-                        <span class="icon material-symbols-rounded">speed</span>
-                        <h4>流式传输</h4>
-                        <p>零缓存高效下载</p>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <h3>高速传输</h3>
+                        <p>流式传输，无需等待</p>
                     </div>
-                    <div class="feature">
-                        <span class="icon material-symbols-rounded">security</span>
-                        <h4>安全过滤</h4>
-                        <p>自动屏蔽危险请求</p>
+                    <div class="grid-item">
+                        <h3>安全可靠</h3>
+                        <p>自动过滤恶意请求</p>
                     </div>
-                    <div class="feature">
-                        <span class="icon material-symbols-rounded">memory</span>
-                        <h4>高性能</h4>
-                        <p>支持大文件传输</p>
+                    <div class="grid-item">
+                        <h3>全球加速</h3>
+                        <p>突破地域限制</p>
                     </div>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <div class="theme-controls">
+                    <span id="theme-indicator" class="theme-indicator"></span>
+                    <button id="theme-toggle" class="theme-toggle" title="点击切换主题 | Shift+点击切换自动主题模式">
+                        <span class="material-symbols-rounded">dark_mode</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlInput = document.getElementById('url-input');
-            const generateBtn = document.getElementById('generate-btn');
-            const result = document.getElementById('result');
-            const proxyUrl = document.getElementById('proxy-url');
-            const copyBtn = document.getElementById('copy-btn');
-            const directLink = document.getElementById('direct-link');
-            
-            generateBtn.addEventListener('click', () => {
-                try {
-                    let targetUrl = urlInput.value.trim();
-                    if (!targetUrl) {
-                        alert('请输入有效的URL');
-                        return;
-                    }
-                    
-                    // 修复URL格式
-                    if (targetUrl.startsWith('http:/') && !targetUrl.startsWith('http://')) {
-                        targetUrl = 'http://' + targetUrl.substring(6);
-                    }
-                    if (targetUrl.startsWith('https:/') && !targetUrl.startsWith('https://')) {
-                        targetUrl = 'https://' + targetUrl.substring(7);
-                    }
-                    
-                    try {
-                        new URL(targetUrl);
-                    } catch (e) {
-                        alert('请输入有效的URL，包含http://或https://');
-                        return;
-                    }
-                    
-                    // 从URL中提取文件名
-                    const urlPath = new URL(targetUrl).pathname;
-                    const fileName = urlPath.substring(urlPath.lastIndexOf('/') + 1);
-                    
-                    const generatedUrl = `${window.location.origin}/${targetUrl}`;
-                    proxyUrl.value = generatedUrl;
-                    directLink.href = `/${targetUrl}`;
-                    directLink.setAttribute("download", fileName);
-                    directLink.setAttribute("target", "_self");
-                    
-                    result.style.display = 'block';
-                    result.scrollIntoView({ behavior: 'smooth' });
-                } catch (err) {
-                    console.error('生成代理链接时发生错误:', err);
-                    alert('生成链接时发生错误: ' + err.message);
-                }
-            });
-            
-            copyBtn.addEventListener('click', () => {
-                proxyUrl.select();
-                document.execCommand('copy');
-                
-                // 复制成功提示
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = 'check';
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                }, 2000);
-            });
-
-            // 在生成按钮点击开始时添加
-            generateBtn.textContent = '处理中...';
-            generateBtn.disabled = true;
-
-            // 在处理完毕后恢复
-            generateBtn.innerHTML = '<span class="icon material-symbols-rounded">cloud_download</span>生成代理链接';
-            generateBtn.disabled = false;
-        });
-    </script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html> 
