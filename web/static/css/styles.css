@@ -620,4 +620,74 @@ body.dark-mode {
     .action-buttons {
         gap: 10px;
     }
+}
+
+/* 顶部链接容器 */
+.top-links {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+/* GitHub链接样式 */
+.github-link, .docker-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: white;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.github-link {
+    background: var(--primary);
+}
+
+.docker-link {
+    background: #2496ED; /* Docker官方蓝色 */
+}
+
+.github-link:hover, .docker-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.github-link:hover {
+    background: var(--primary-dark);
+}
+
+.docker-link:hover {
+    background: #1d7ac7; /* 深一点的Docker蓝 */
+}
+
+.github-icon, .docker-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.dark-mode .github-link {
+    background: var(--dark-primary);
+}
+
+.dark-mode .github-link:hover {
+    background: var(--dark-primary-dark);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .github-text, .docker-text {
+        display: none; /* 在小屏幕上只显示图标 */
+    }
+    
+    .github-link, .docker-link {
+        padding: 0.5rem;
+    }
 } 
