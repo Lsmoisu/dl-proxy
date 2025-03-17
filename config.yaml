@@ -1,0 +1,24 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  
+proxy:
+  connectTimeout: 5          # 连接超时(秒)
+  transferTimeout: 300       # 传输超时(秒)
+  bufferSize: 32768          # 缓冲区大小(字节)
+  chunkedThreshold: 104857600 # 分块传输阈值(100MB)
+  
+security:
+  rateLimiting:
+    enabled: true
+    requestsPerMinute: 60    # 每IP每分钟请求数
+  privateIPBlocking: true    # 阻止内网IP请求
+  
+headers:
+  removeProxyHeaders: true   # 删除Proxy-*头
+  removeSensitiveHeaders: true # 删除敏感头
+  nodeId: "node1"            # 节点标识
+  
+logging:
+  level: "info"              # 日志级别: debug, info, warn, error
+  format: "text"             # 日志格式: text, json 

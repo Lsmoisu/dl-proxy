@@ -1,0 +1,18 @@
+services:
+  dl-proxy:
+    image: zarilla/dl-proxy:latest
+    container_name: dl-proxy
+    restart: unless-stopped
+    ports:
+      - "18080:8080"
+    volumes:
+      # 可选：挂载自定义配置文件
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s 
