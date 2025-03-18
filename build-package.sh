@@ -4,17 +4,13 @@
 APP_NAME="dl-proxy"
 PACKAGE_DIR="package"
 
-# 创建输出目录
-mkdir -p ${PACKAGE_DIR}
-echo "开始多平台编译 ${APP_NAME}..."
-
+# 编译 Windows AMD64 版本
+echo "开始编译 Windows AMD64 版本..."
 # 清理旧文件
 rm -rf ${PACKAGE_DIR}/*
-
 # 编译 Windows AMD64 版本
-echo "编译 Windows AMD64 版本..."
-echo "输出文件: ${PACKAGE_DIR}/${APP_NAME}_windows_amd64.exe"
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${PACKAGE_DIR}/${APP_NAME}_windows_amd64.exe || {
+echo "输出文件: ${PACKAGE_DIR}/${APP_NAME}_windows_amd64"
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${PACKAGE_DIR}/${APP_NAME}_windows_amd64 || {
     echo "Windows AMD64 版本编译失败"
     exit 1
 }
@@ -56,8 +52,6 @@ chmod +x ${PACKAGE_DIR}/${APP_NAME}_linux_amd64
 chmod +x ${PACKAGE_DIR}/${APP_NAME}_linux_arm64
 chmod +x ${PACKAGE_DIR}/${APP_NAME}_darwin_amd64
 chmod +x ${PACKAGE_DIR}/${APP_NAME}_darwin_arm64
-
-
 
 echo "编译完成！所有文件已保存到 ${PACKAGE_DIR} 目录"
 ls -lh ${PACKAGE_DIR} 
