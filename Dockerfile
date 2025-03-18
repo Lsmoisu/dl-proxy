@@ -34,8 +34,7 @@ COPY config.yaml .
 # 安装必要的运行时依赖并设置东八区时区
 RUN apk --no-cache add tzdata ca-certificates && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    echo "Asia/Shanghai" > /etc/timezone && \
-    apk del tzdata
+    echo "Asia/Shanghai" > /etc/timezone
 
 # 设置容器启动时运行的可执行文件
 ENTRYPOINT ["/app/dl-proxy"]
