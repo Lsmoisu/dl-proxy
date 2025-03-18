@@ -79,11 +79,10 @@ func (rl *RateLimiter) Allow(ip string) bool {
 
 // 清理过期记录
 func (rl *RateLimiter) cleanupOldRecords(window *slidingWindow, now time.Time) {
-	cutoff := now.Add(-rl.windowSize)
-	for i := range window.timestamps {
-		if window.timestamps[i].Before(cutoff) {
-			window.timestamps[i] = time.Time{} // 设置为零值表示无记录
-		}
+	// 使用环形缓冲区，只清理头部过期的记录
+	for !window.timestamps[window.index].IsZero() && window.timestamps[window.index].Before(now.Add(-rl.windowSize)) {
+		window.timestamps[window.index] = time.Time{}
+		window.index = (window.index + 1) % window.size
 	}
 	window.lastClean = now
 }
