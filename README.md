@@ -26,7 +26,6 @@
 
 示例网站：
 https://dl.aaa.team/
-https://df.aaa.team/
 
 ## 安装与部署
 
